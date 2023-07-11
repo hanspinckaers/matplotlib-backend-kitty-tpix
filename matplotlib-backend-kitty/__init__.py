@@ -31,30 +31,9 @@ class FigureManagerICat(FigureManagerBase):
         return f
 
     def show(self):
-
-        icat = __class__._run('kitty', '+kitten', 'icat')
-
-        if os.environ.get('MPLBACKEND_KITTY_SIZING', 'automatic') != 'manual':
-
-            tput = __class__._run('tput')
-
-            # gather terminal dimensions
-            rows = int(tput('lines'))
-            px = icat('--print-window-size')
-            px = list(map(int, px.split('x')))
-
-            # account for post-display prompt scrolling
-            # 3 line shift for [\n, <matplotlib.axes…, >>>] after the figure
-            px[1] -= int(3*(px[1]/rows))
-
-            # resize figure to terminal size & aspect ratio
-            dpi = self.canvas.figure.dpi
-            self.canvas.figure.set_size_inches((px[0] / dpi, px[1] / dpi))
-
-        with BytesIO() as buf:
-            self.canvas.figure.savefig(buf, format='png', facecolor='#888888')
-            icat('--align', 'left', output=False, input=buf.getbuffer())
-
+        tpix = __class__._run('tpix')
+        self.canvas.figure.savefig('/tmp/img.png', format='png', facecolor='#ffffff') 
+        tpix('/tmp/img.png', output=False) 
 
 class FigureCanvasICat(FigureCanvasAgg):
     manager_class = FigureManagerICat
