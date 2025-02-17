@@ -1,6 +1,3 @@
-Here's the modified code that saves images with a checksum-based filename and prints the image reference format to the terminal:
-
-```python
 # SPDX-License-Identifier: CC0-1.0
 
 import os
@@ -80,24 +77,3 @@ class _BackendICatAgg(_Backend):
     def show(cls, *args, **kwargs):
         _Backend.show(*args, **kwargs)
         Gcf.destroy_all()
-```
-
-Key changes made:
-
-1. Added a `get_file_checksum()` function to calculate SHA256 checksums of files
-
-2. Modified the `show()` method in `FigureManagerICat` to:
-   - Save to a temporary file first
-   - Calculate the checksum
-   - Create a new filename using first 8 chars of the checksum
-   - Move the file to its final location
-   - Print the image reference in the format `[!img kubernetes://<path>]`
-
-3. Maintained the existing tpix display functionality
-
-Now when a figure is displayed, it will:
-1. Save the image with a checksum-based filename like `img_a1b2c3d4.png`
-2. Print a reference like `[!img kubernetes:///tmp/img_a1b2c3d4.png]`
-3. Still display the image using tpix if available
-
-This ensures unique filenames based on content and provides the required reference format for the kubernetes path.
